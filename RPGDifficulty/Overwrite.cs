@@ -106,6 +106,13 @@ class DamageInteraction
                             Debug.LogError($"Old Base Max Health: {oldBaseMaxHealth}");
                             Debug.LogError($"Old Max Health: {oldMaxHealth}");
                             Debug.LogError($"Old Health: {oldHealth}");
+
+                            entityLifeStats.BaseMaxHealth = oldBaseMaxHealth;
+                            entityLifeStats.MaxHealth = oldMaxHealth;
+                            entityLifeStats.Health = oldHealth;
+
+                            Debug.LogError("Resetting calculations to the previous");
+                            Debug.LogError("------------------------");
                         }
                         else
                         {
