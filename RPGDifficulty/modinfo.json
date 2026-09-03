@@ -6,9 +6,10 @@
         "BoboDev"
     ],
     "description": "Increase entities stats based on world distance and spawn condition manipulation",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "Side": "Server",
     "dependencies": {
-        "game": ""
+        "game": "",
+        "openconfiguration": ""
     }
 }
