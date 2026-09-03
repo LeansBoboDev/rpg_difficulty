@@ -9,7 +9,7 @@ using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 namespace RPGDifficulty;
 
-public class Initialization : ModSystem
+public class RPGDifficultyModSystem : ModSystem
 {
     readonly Overwrite overwriter = new();
     static internal ICoreServerAPI serverAPI;

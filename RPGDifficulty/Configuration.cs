@@ -129,17 +129,17 @@ public static class Configuration
     {
         if (Blacklist.enableBlacklist && blacklist.ContainsKey(entityCode))
         {
-            Initialization.Logger.LogDebug($"{entityCode} is on blacklist, ignoring stats {statType}");
+            RPGDifficultyModSystem.Logger.LogDebug($"{entityCode} is on blacklist, ignoring stats {statType}");
             return false;
         }
         if (Whitelist.enableWhitelist)
         {
             if (whitelist.ContainsKey(entityCode))
             {
-                Initialization.Logger.LogDebug($"{entityCode} is on whitelist, increasing stats {statType}");
+                RPGDifficultyModSystem.Logger.LogDebug($"{entityCode} is on whitelist, increasing stats {statType}");
                 return true;
             }
-            Initialization.Logger.LogDebug($"{entityCode} is not on whitelist, ignoring stats {statType}");
+            RPGDifficultyModSystem.Logger.LogDebug($"{entityCode} is not on whitelist, ignoring stats {statType}");
             return false;
         }
         return true;

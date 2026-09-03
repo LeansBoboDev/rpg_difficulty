@@ -19,11 +19,11 @@ class Overwrite
         {
             instance = new Harmony("rpgdifficulty");
             instance.PatchCategory("rpgdifficulty");
-            Initialization.Logger.Log("Damage interaction has been overwrited");
+            RPGDifficultyModSystem.Logger.Log("Damage interaction has been overwrited");
         }
         else
         {
-            Initialization.Logger.Log("RPGDifficulty overwriter has already patched, probably by the singleplayer server");
+            RPGDifficultyModSystem.Logger.Log("RPGDifficulty overwriter has already patched, probably by the singleplayer server");
         }
     }
 }
@@ -41,11 +41,11 @@ class DamageInteraction
         if (!entity.Alive) return;
 
         // Check if should spawn entity
-        if (!Initialization.ShouldEntitySpawn(entity))
+        if (!RPGDifficultyModSystem.ShouldEntitySpawn(entity))
         {
-            Initialization.Logger.LogDebug($"Entity removed by ShouldEntitySpawn: {entity.GetName()}");
+            RPGDifficultyModSystem.Logger.LogDebug($"Entity removed by ShouldEntitySpawn: {entity.GetName()}");
 
-            Initialization.serverAPI?.World.DespawnEntity(entity, new()
+            RPGDifficultyModSystem.serverAPI?.World.DespawnEntity(entity, new()
             {
                 Reason = EnumDespawnReason.Removed
             });
@@ -55,8 +55,8 @@ class DamageInteraction
         // Checking if the entity already have the calculation
         if (!entity.Attributes.GetBool("RPGDifficultyAlreadySet"))
         {
-            Initialization.Logger.LogDebug($"Calculating entity status: {entity.Code}");
-            Initialization.SetEntityStats(entity);
+            RPGDifficultyModSystem.Logger.LogDebug($"Calculating entity status: {entity.Code}");
+            RPGDifficultyModSystem.SetEntityStats(entity);
         }
 
         // Single player / Lan treatment
@@ -94,29 +94,29 @@ class DamageInteraction
 
                         if (entityLifeStats.Health < 1)
                         {
-                            Initialization.Logger.LogError("------------------------");
-                            Initialization.Logger.LogError($"ERROR: Entity health calculations goes really wrong: {entity.GetName()}, ");
-                            Initialization.Logger.LogError($"Distance: {entity.Attributes.GetDouble("RPGDifficultyHealthStatsIncreaseDistance")}");
-                            Initialization.Logger.LogError($"Height: {entity.Attributes.GetDouble("RPGDifficultyHealthStatsIncreaseHeight")}");
-                            Initialization.Logger.LogError($"Age: {entity.Attributes.GetDouble("RPGDifficultyHealthStatsIncreaseAge")}");
-                            Initialization.Logger.LogError($"Health Percentage: {healthPercentage}");
-                            Initialization.Logger.LogError($"Base Max Health: {entityLifeStats.BaseMaxHealth}");
-                            Initialization.Logger.LogError($"Max Health: {entityLifeStats.MaxHealth}");
-                            Initialization.Logger.LogError($"Health: {entityLifeStats.Health}");
-                            Initialization.Logger.LogError($"Old Base Max Health: {oldBaseMaxHealth}");
-                            Initialization.Logger.LogError($"Old Max Health: {oldMaxHealth}");
-                            Initialization.Logger.LogError($"Old Health: {oldHealth}");
+                            RPGDifficultyModSystem.Logger.LogError("------------------------");
+                            RPGDifficultyModSystem.Logger.LogError($"ERROR: Entity health calculations goes really wrong: {entity.GetName()}, ");
+                            RPGDifficultyModSystem.Logger.LogError($"Distance: {entity.Attributes.GetDouble("RPGDifficultyHealthStatsIncreaseDistance")}");
+                            RPGDifficultyModSystem.Logger.LogError($"Height: {entity.Attributes.GetDouble("RPGDifficultyHealthStatsIncreaseHeight")}");
+                            RPGDifficultyModSystem.Logger.LogError($"Age: {entity.Attributes.GetDouble("RPGDifficultyHealthStatsIncreaseAge")}");
+                            RPGDifficultyModSystem.Logger.LogError($"Health Percentage: {healthPercentage}");
+                            RPGDifficultyModSystem.Logger.LogError($"Base Max Health: {entityLifeStats.BaseMaxHealth}");
+                            RPGDifficultyModSystem.Logger.LogError($"Max Health: {entityLifeStats.MaxHealth}");
+                            RPGDifficultyModSystem.Logger.LogError($"Health: {entityLifeStats.Health}");
+                            RPGDifficultyModSystem.Logger.LogError($"Old Base Max Health: {oldBaseMaxHealth}");
+                            RPGDifficultyModSystem.Logger.LogError($"Old Max Health: {oldMaxHealth}");
+                            RPGDifficultyModSystem.Logger.LogError($"Old Health: {oldHealth}");
 
                             entityLifeStats.BaseMaxHealth = oldBaseMaxHealth;
                             entityLifeStats.MaxHealth = oldMaxHealth;
                             entityLifeStats.Health = oldHealth;
 
-                            Initialization.Logger.LogError("Resetting calculations to the previous");
-                            Initialization.Logger.LogError("------------------------");
+                            RPGDifficultyModSystem.Logger.LogError("Resetting calculations to the previous");
+                            RPGDifficultyModSystem.Logger.LogError("------------------------");
                         }
                         else
                         {
-                            Initialization.Logger.LogDebug($"[LoadConfig] {entity.Code} health updated to: {entityLifeStats.MaxHealth}");
+                            RPGDifficultyModSystem.Logger.LogDebug($"[LoadConfig] {entity.Code} health updated to: {entityLifeStats.MaxHealth}");
                             // Health status can only be set once, otherwise will be updated every world start or entity reload
                             entity.Attributes.SetBool("RPGDifficultyHealthAlreadySet", true);
                         }
@@ -159,7 +159,7 @@ class DamageInteraction
 
                             if (i == 4)
                             {
-                                Initialization.Logger.LogError($"Could not setup entity health after 5 tries: {entity.GetName()}");
+                                RPGDifficultyModSystem.Logger.LogError($"Could not setup entity health after 5 tries: {entity.GetName()}");
                             }
                         }
                     });
@@ -185,7 +185,7 @@ class DamageInteraction
             FieldInfo protectedDamage = AccessTools.Field(typeof(AiTaskMeleeAttack), "damage");
             protectedDamage.SetValue(__instance, damage);
 
-            Initialization.Logger.LogDebug($"[LoadConfig] Entity damage updated to: {protectedDamage.GetValue(__instance)}");
+            RPGDifficultyModSystem.Logger.LogDebug($"[LoadConfig] Entity damage updated to: {protectedDamage.GetValue(__instance)}");
         }
         #endregion
     }
@@ -196,15 +196,15 @@ class DamageInteraction
     [HarmonyPatch(typeof(ServerMain), "SpawnEntity", [typeof(Entity), typeof(EntityProperties)])]
     public static bool SpawnEntity(Entity entity, EntityProperties type)
     {
-        if (!Initialization.ShouldEntitySpawn(entity))
+        if (!RPGDifficultyModSystem.ShouldEntitySpawn(entity))
         {
-            Initialization.Logger.LogDebug($"Entity removed by ShouldEntitySpawn: {entity.GetName()}");
+            RPGDifficultyModSystem.Logger.LogDebug($"Entity removed by ShouldEntitySpawn: {entity.GetName()}");
             return false;
         }
 
         // Checking if the entity already have the calculation
         if (!entity.Attributes.GetBool("RPGDifficultyAlreadySet"))
-            Initialization.SetEntityStats(entity);
+            RPGDifficultyModSystem.SetEntityStats(entity);
 
         return true;
     }
@@ -229,6 +229,6 @@ class DamageInteraction
         // 1 means 100%, luckly your base harvest in config is 0.0 so no changes needed
         byPlayer.Entity.Stats.Set("animalLootDropRate", "animalLootDropRate", dropRate - 1f);
 
-        Initialization.Logger.LogDebug($"{byPlayer.PlayerName} harvested any entity with knife, multiply drop: {byPlayer.Entity.Stats.GetBlended("animalLootDropRate")}");
+        RPGDifficultyModSystem.Logger.LogDebug($"{byPlayer.PlayerName} harvested any entity with knife, multiply drop: {byPlayer.Entity.Stats.GetBlended("animalLootDropRate")}");
     }
 }
