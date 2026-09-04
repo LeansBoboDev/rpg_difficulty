@@ -1,7 +1,5 @@
 .vscode
-CakeBuild
 Releases
-RPGDifficulty/bin
-RPGDifficulty/obj
+*bin
+*obj
 build.ps1
-RPGDifficulty.sln
