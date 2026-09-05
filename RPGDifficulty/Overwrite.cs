@@ -83,13 +83,13 @@ class DamageInteraction
                     if (oldBaseMaxHealth > 1 && oldMaxHealth > 1 && oldHealth > 1)
                     {
                         entityLifeStats.BaseMaxHealth += (int)Math.Round(entityLifeStats.BaseMaxHealth * healthPercentage);
-                        if (Configuration.Status.enableStatusVariation)
+                        if (Configuration.StatusVariation.enableStatusVariation)
                             entityLifeStats.BaseMaxHealth *= (float)entity.Attributes.GetDouble("RPGDifficultyStatusVariation");
                         entityLifeStats.MaxHealth += (int)Math.Round(entityLifeStats.MaxHealth * healthPercentage);
-                        if (Configuration.Status.enableStatusVariation)
+                        if (Configuration.StatusVariation.enableStatusVariation)
                             entityLifeStats.MaxHealth *= (float)entity.Attributes.GetDouble("RPGDifficultyStatusVariation");
                         entityLifeStats.Health += (int)Math.Round(entityLifeStats.Health * healthPercentage);
-                        if (Configuration.Status.enableStatusVariation)
+                        if (Configuration.StatusVariation.enableStatusVariation)
                             entityLifeStats.Health *= (float)entity.Attributes.GetDouble("RPGDifficultyStatusVariation");
 
                         if (entityLifeStats.Health < 1)
@@ -179,7 +179,7 @@ class DamageInteraction
             damage += (float)(damage * entity.Attributes.GetDouble("RPGDifficultyDamageStatsIncreaseAge"));
 
             // Variation
-            if (Configuration.Status.enableStatusVariation)
+            if (Configuration.StatusVariation.enableStatusVariation)
                 damage *= (float)entity.Attributes.GetDouble("RPGDifficultyStatusVariation");
 
             FieldInfo protectedDamage = AccessTools.Field(typeof(AiTaskMeleeAttack), "damage");
@@ -215,14 +215,14 @@ class DamageInteraction
     public static void GenerateDropsStart(EntityBehaviorHarvestable __instance, IPlayer byPlayer)
     {
         // Check if player exist and options is enabled
-        if (byPlayer != null && Configuration.Status.lootStatsIncreaseEveryDistance == 0 && Configuration.Status.lootStatsIncreaseEveryHeight == 0) return;
+        if (byPlayer != null && Configuration.StatusDistance.lootStatsIncreaseEveryDistance == 0 && Configuration.StatusHeight.lootStatsIncreaseEveryHeight == 0) return;
 
         // Get the final droprate
-        float dropRate = (float)Configuration.Status.baseHarvest + (float)__instance.entity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseDistance");
+        float dropRate = (float)__instance.entity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseDistance");
         dropRate += (float)__instance.entity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseHeight");
         dropRate += (float)__instance.entity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseAge");
 
-        if (Configuration.Status.enableStatusVariation)
+        if (Configuration.StatusVariation.enableStatusVariation)
             dropRate *= (float)__instance.entity.Attributes.GetDouble("RPGDifficultyStatusVariation");
 
         // Don't worry, it will be reseted automatically by the game

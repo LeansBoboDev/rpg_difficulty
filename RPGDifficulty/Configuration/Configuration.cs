@@ -8,7 +8,13 @@ public static partial class Configuration
 {
     internal static void Load(ICoreAPI api)
     {
-        LoadStatus(api);
+        LoadBase(api);
+        LoadStatusVariation(api);
+        LoadStatusHeight(api);
+        LoadStatusDistance(api);
+        LoadStatusAge(api);
+        LoadSpawnConditions(api);
+        LoadStatusRegion(api);
         LoadWhitelist(api);
         LoadBlacklist(api);
     }

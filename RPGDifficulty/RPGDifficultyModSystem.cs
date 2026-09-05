@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using HarmonyLib;
@@ -54,14 +54,14 @@ public class RPGDifficultyModSystem : ModSystem
     private static void OnKnifeHarvested(IPlayer byPlayer, Entity harvestedEntity, ref float number)
     {
         // Check if player exist and options is enabled
-        if (byPlayer == null || (Configuration.Status.lootStatsIncreaseEveryDistance == 0 && Configuration.Status.lootStatsIncreaseEveryHeight == 0 && Configuration.Status.lootStatsIncreaseEveryAge == 0)) return;
+        if (byPlayer == null || (Configuration.StatusDistance.lootStatsIncreaseEveryDistance == 0 && Configuration.StatusHeight.lootStatsIncreaseEveryHeight == 0 && Configuration.StatusAge.lootStatsIncreaseEveryAge == 0)) return;
 
         // Get the final droprate
-        float dropRate = (float)Configuration.Status.baseHarvest + (float)harvestedEntity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseDistance");
+        float dropRate = (float)harvestedEntity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseDistance");
         dropRate += (float)harvestedEntity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseHeight");
         dropRate += (float)harvestedEntity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseAge");
 
-        if (Configuration.Status.enableStatusVariation)
+        if (Configuration.StatusVariation.enableStatusVariation)
             dropRate *= (float)harvestedEntity.Attributes.GetDouble("RPGDifficultyStatusVariation");
 
         number += dropRate;
@@ -87,25 +87,25 @@ public class RPGDifficultyModSystem : ModSystem
             if (entityZ < 0) entityZ = Math.Abs(entityZ);
 
             // Distance calculation
-            if (Configuration.Status.enableStatusIncreaseByDistance)
+            if (Configuration.StatusDistance.enableStatusIncreaseByDistance)
             {
-                statsIncreaseDistance = (int)(Math.Floor(entityX / Configuration.Status.increaseStatsEveryDistance) +
-                                              Math.Floor(entityZ / Configuration.Status.increaseStatsEveryDistance));
+                statsIncreaseDistance = (int)(Math.Floor(entityX / Configuration.StatusDistance.increaseStatsEveryDistance) +
+                                              Math.Floor(entityZ / Configuration.StatusDistance.increaseStatsEveryDistance));
             }
 
             // Height Calculation
-            if (Configuration.Status.enableStatusIncreaseByHeight)
+            if (Configuration.StatusHeight.enableStatusIncreaseByHeight)
             {
-                double heightDifference = Configuration.Status.baseStatusHeight - entityY;
+                double heightDifference = Configuration.StatusHeight.baseStatusHeight - entityY;
                 if (heightDifference > 0)
                 {
-                    statsIncreaseHeight = (int)Math.Floor(heightDifference / Configuration.Status.increaseStatsEveryDownHeight);
+                    statsIncreaseHeight = (int)Math.Floor(heightDifference / Configuration.StatusHeight.increaseStatsEveryDownHeight);
                 }
             }
 
 
             // Age Calculation
-            if (Configuration.Status.enableStatusIncreaseByAge)
+            if (Configuration.StatusAge.enableStatusIncreaseByAge)
             {
                 statsIncreaseAge = Configuration.GetStatusByWorldAge(serverAPI);
             }
@@ -115,9 +115,9 @@ public class RPGDifficultyModSystem : ModSystem
         // Increasing experience gain
         amount += (ulong)Math.Round(amount *
             (
-                (Configuration.Status.levelUPExperienceIncreaseEveryDistance * statsIncreaseDistance) +
-                (Configuration.Status.levelUPExperienceIncreaseEveryHeight * statsIncreaseHeight) +
-                (Configuration.Status.levelUPExperienceIncreaseEveryAge * statsIncreaseAge)
+                (Configuration.StatusDistance.levelUPExperienceIncreaseEveryDistance * statsIncreaseDistance) +
+                (Configuration.StatusHeight.levelUPExperienceIncreaseEveryHeight * statsIncreaseHeight) +
+                (Configuration.StatusAge.levelUPExperienceIncreaseEveryAge * statsIncreaseAge)
             ));
         Logger.LogDebug($"[EXPERIENCE] After: {amount}");
     }
@@ -146,7 +146,7 @@ public class RPGDifficultyModSystem : ModSystem
     public override void AssetsLoaded(ICoreAPI api)
     {
         Configuration.Load(api);
-        Logger.ExtendedLoggingEnabled = Configuration.Status.enableExtendedLog;
+        Logger.ExtendedLoggingEnabled = Configuration.Base.enableExtendedLog;
         Logger.Log("Configuration set");
     }
 
@@ -201,24 +201,24 @@ public class RPGDifficultyModSystem : ModSystem
                 entity.Attributes.SetDouble("RPGDifficultyEntitySpawnAge", (int)serverAPI.World.Calendar.ElapsedDays);
 
                 // Distance calculation
-                if (Configuration.Status.enableStatusIncreaseByDistance)
+                if (Configuration.StatusDistance.enableStatusIncreaseByDistance)
                 {
-                    statsIncreaseDistance = (int)(Math.Floor(entityX / Configuration.Status.increaseStatsEveryDistance) +
-                                                  Math.Floor(entityZ / Configuration.Status.increaseStatsEveryDistance));
+                    statsIncreaseDistance = (int)(Math.Floor(entityX / Configuration.StatusDistance.increaseStatsEveryDistance) +
+                                                  Math.Floor(entityZ / Configuration.StatusDistance.increaseStatsEveryDistance));
                 }
 
                 // Height Calculation
-                if (Configuration.Status.enableStatusIncreaseByHeight)
+                if (Configuration.StatusHeight.enableStatusIncreaseByHeight)
                 {
-                    double heightDifference = Configuration.Status.baseStatusHeight - entityY;
+                    double heightDifference = Configuration.StatusHeight.baseStatusHeight - entityY;
                     if (heightDifference > 0)
                     {
-                        statsIncreaseHeight = (int)Math.Floor(heightDifference / Configuration.Status.increaseStatsEveryDownHeight);
+                        statsIncreaseHeight = (int)Math.Floor(heightDifference / Configuration.StatusHeight.increaseStatsEveryDownHeight);
                     }
                 }
 
                 // Age Calculation
-                if (Configuration.Status.enableStatusIncreaseByAge)
+                if (Configuration.StatusAge.enableStatusIncreaseByAge)
                 {
                     statsIncreaseAge = Configuration.GetStatusByWorldAge(serverAPI);
                 }
@@ -229,24 +229,24 @@ public class RPGDifficultyModSystem : ModSystem
             {
                 // Getting variation
                 double variation = 0;
-                if (Configuration.Status.enableStatusVariation)
+                if (Configuration.StatusVariation.enableStatusVariation)
                 {
-                    variation = Configuration.Status.minimumVariableStatusAverage + (Configuration.Status.maxVariableStatusAverage - Configuration.Status.minimumVariableStatusAverage) * random.NextDouble();
+                    variation = Configuration.StatusVariation.minimumVariableStatusAverage + (Configuration.StatusVariation.maxVariableStatusAverage - Configuration.StatusVariation.minimumVariableStatusAverage) * random.NextDouble();
                     variation = Math.Round(variation, 2);
                     entity.Attributes.SetDouble("RPGDifficultyStatusVariation", variation);
                 }
 
-                double healthDistance = Configuration.Status.lifeStatsIncreaseEveryDistance * statsIncreaseDistance;
-                if (healthDistance > Configuration.Status.maximumLifeStatusIncreasedByDistance)
-                    healthDistance = Configuration.Status.maximumLifeStatusIncreasedByDistance;
+                double healthDistance = Configuration.StatusDistance.lifeStatsIncreaseEveryDistance * statsIncreaseDistance;
+                if (healthDistance > Configuration.StatusDistance.maximumLifeStatusIncreasedByDistance)
+                    healthDistance = Configuration.StatusDistance.maximumLifeStatusIncreasedByDistance;
 
-                double healthHeight = Configuration.Status.lifeStatsIncreaseEveryHeight * statsIncreaseHeight;
-                if (healthHeight > Configuration.Status.maximumLifeStatusIncreasedByHeight)
-                    healthHeight = Configuration.Status.maximumLifeStatusIncreasedByHeight;
+                double healthHeight = Configuration.StatusHeight.lifeStatsIncreaseEveryHeight * statsIncreaseHeight;
+                if (healthHeight > Configuration.StatusHeight.maximumLifeStatusIncreasedByHeight)
+                    healthHeight = Configuration.StatusHeight.maximumLifeStatusIncreasedByHeight;
 
-                double healthAge = Configuration.Status.lifeStatsIncreaseEveryAge * statsIncreaseAge;
-                if (healthAge > Configuration.Status.maximumLifeStatusIncreasedByAge)
-                    healthAge = Configuration.Status.maximumLifeStatusIncreasedByAge;
+                double healthAge = Configuration.StatusAge.lifeStatsIncreaseEveryAge * statsIncreaseAge;
+                if (healthAge > Configuration.StatusAge.maximumLifeStatusIncreasedByAge)
+                    healthAge = Configuration.StatusAge.maximumLifeStatusIncreasedByAge;
 
                 // Setting health variables
                 if (increaseByDistance)
@@ -256,17 +256,17 @@ public class RPGDifficultyModSystem : ModSystem
                 if (increaseByAge)
                     entity.Attributes.SetDouble("RPGDifficultyHealthStatsIncreaseAge", healthAge);
 
-                double damageDistance = Configuration.Status.damageStatsIncreaseEveryDistance * statsIncreaseDistance;
-                if (damageDistance > Configuration.Status.maximumDamageStatusIncreasedByDistance)
-                    damageDistance = Configuration.Status.maximumDamageStatusIncreasedByDistance;
+                double damageDistance = Configuration.StatusDistance.damageStatsIncreaseEveryDistance * statsIncreaseDistance;
+                if (damageDistance > Configuration.StatusDistance.maximumDamageStatusIncreasedByDistance)
+                    damageDistance = Configuration.StatusDistance.maximumDamageStatusIncreasedByDistance;
 
-                double damageHeight = Configuration.Status.damageStatsIncreaseEveryHeight * statsIncreaseHeight;
-                if (damageHeight > Configuration.Status.maximumDamageStatusIncreasedByHeight)
-                    damageHeight = Configuration.Status.maximumDamageStatusIncreasedByHeight;
+                double damageHeight = Configuration.StatusHeight.damageStatsIncreaseEveryHeight * statsIncreaseHeight;
+                if (damageHeight > Configuration.StatusHeight.maximumDamageStatusIncreasedByHeight)
+                    damageHeight = Configuration.StatusHeight.maximumDamageStatusIncreasedByHeight;
 
-                double damageAge = Configuration.Status.damageStatsIncreaseEveryAge * statsIncreaseAge;
-                if (damageAge > Configuration.Status.maximumDamageStatusIncreasedByAge)
-                    damageAge = Configuration.Status.maximumDamageStatusIncreasedByAge;
+                double damageAge = Configuration.StatusAge.damageStatsIncreaseEveryAge * statsIncreaseAge;
+                if (damageAge > Configuration.StatusAge.maximumDamageStatusIncreasedByAge)
+                    damageAge = Configuration.StatusAge.maximumDamageStatusIncreasedByAge;
 
                 // Setting damage variables
                 if (increaseByDistance)
@@ -276,17 +276,17 @@ public class RPGDifficultyModSystem : ModSystem
                 if (increaseByAge)
                     entity.Attributes.SetDouble("RPGDifficultyDamageStatsIncreaseAge", damageAge);
 
-                double lootDistance = Configuration.Status.lootStatsIncreaseEveryDistance * statsIncreaseDistance;
-                if (lootDistance > Configuration.Status.maximumLootStatusIncreasedByDistance)
-                    lootDistance = Configuration.Status.maximumLootStatusIncreasedByDistance;
+                double lootDistance = Configuration.StatusDistance.lootStatsIncreaseEveryDistance * statsIncreaseDistance;
+                if (lootDistance > Configuration.StatusDistance.maximumLootStatusIncreasedByDistance)
+                    lootDistance = Configuration.StatusDistance.maximumLootStatusIncreasedByDistance;
 
-                double lootHeight = Configuration.Status.lootStatsIncreaseEveryHeight * statsIncreaseHeight;
-                if (lootHeight > Configuration.Status.maximumLootStatusIncreasedByHeight)
-                    lootHeight = Configuration.Status.maximumLootStatusIncreasedByHeight;
+                double lootHeight = Configuration.StatusHeight.lootStatsIncreaseEveryHeight * statsIncreaseHeight;
+                if (lootHeight > Configuration.StatusHeight.maximumLootStatusIncreasedByHeight)
+                    lootHeight = Configuration.StatusHeight.maximumLootStatusIncreasedByHeight;
 
-                double lootAge = Configuration.Status.lootStatsIncreaseEveryAge * statsIncreaseAge;
-                if (lootAge > Configuration.Status.maximumLootStatusIncreasedByAge)
-                    lootAge = Configuration.Status.maximumLootStatusIncreasedByAge;
+                double lootAge = Configuration.StatusAge.lootStatsIncreaseEveryAge * statsIncreaseAge;
+                if (lootAge > Configuration.StatusAge.maximumLootStatusIncreasedByAge)
+                    lootAge = Configuration.StatusAge.maximumLootStatusIncreasedByAge;
 
                 // Setting damage variables
                 if (increaseByDistance)
@@ -308,7 +308,7 @@ public class RPGDifficultyModSystem : ModSystem
     public static bool ShouldEntitySpawn(Entity entity)
     {
         // Swiping every condition
-        foreach (SpawnCondition condition in Configuration.Status.entitySpawnConditions)
+        foreach (SpawnCondition condition in Configuration.SpawnConditions.entitySpawnConditions)
         {
             // Check if the spawn condition is for this entity
             if (condition.code != entity.Code.ToString())
