@@ -56,7 +56,7 @@ public class StatusConfigurations
     public double levelUPExperienceIncreaseEveryAge = 0.1;
 
     public List<SpawnCondition> entitySpawnConditions = [];
-    public bool enableExtendedLog = true;
+    public bool enableExtendedLog = false;
 }
 
 public static partial class Configuration
