@@ -24,7 +24,7 @@ public static partial class Configuration
     {
         Blacklist = new BlacklistConfigurations
         {
-            enableBlacklist = ConfigManager.LoadModConfig<BlacklistToggle>(api, "RPGDifficulty", "base", RPGDifficultyModSystem.Logger, "rpgdifficulty:config/base.json").enableBlacklist,
+            enableBlacklist = ConfigManager.LoadModConfig<BlacklistToggle>(api, "RPGDifficulty", "base", RPGDifficultyModSystem.Logger).enableBlacklist,
             Distance = ConfigManager.LoadModConfig<Dictionary<string, double>>(api, "RPGDifficulty", "blacklistdistance", RPGDifficultyModSystem.Logger, "rpgdifficulty:config/blacklistdistance.json"),
             Height = ConfigManager.LoadModConfig<Dictionary<string, double>>(api, "RPGDifficulty", "blacklistheight", RPGDifficultyModSystem.Logger, "rpgdifficulty:config/blacklistheight.json"),
             Age = ConfigManager.LoadModConfig<Dictionary<string, double>>(api, "RPGDifficulty", "blacklistage", RPGDifficultyModSystem.Logger, "rpgdifficulty:config/blacklistage.json"),

@@ -64,7 +64,7 @@ public static partial class Configuration
     public static StatusConfigurations Status = new();
 
     private static void LoadStatus(ICoreAPI api)
-        => Status = ConfigManager.LoadModConfig<StatusConfigurations>(api, "RPGDifficulty", "base", RPGDifficultyModSystem.Logger, "rpgdifficulty:config/base.json");
+        => Status = ConfigManager.LoadModConfig<StatusConfigurations>(api, "RPGDifficulty", "base", RPGDifficultyModSystem.Logger);
 
     public static int GetStatusByWorldAge(ICoreAPI serverAPI)
         => (int)serverAPI.World.Calendar.ElapsedDays / Status.increaseStatsEveryWorldDays;

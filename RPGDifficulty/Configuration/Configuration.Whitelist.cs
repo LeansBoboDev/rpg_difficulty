@@ -24,7 +24,7 @@ public static partial class Configuration
     {
         Whitelist = new WhitelistConfigurations
         {
-            enableWhitelist = ConfigManager.LoadModConfig<WhitelistToggle>(api, "RPGDifficulty", "base", RPGDifficultyModSystem.Logger, "rpgdifficulty:config/base.json").enableWhitelist,
+            enableWhitelist = ConfigManager.LoadModConfig<WhitelistToggle>(api, "RPGDifficulty", "base", RPGDifficultyModSystem.Logger).enableWhitelist,
             Distance = ConfigManager.LoadModConfig<Dictionary<string, double>>(api, "RPGDifficulty", "whitelistdistance", RPGDifficultyModSystem.Logger, "rpgdifficulty:config/whitelistdistance.json"),
             Height = ConfigManager.LoadModConfig<Dictionary<string, double>>(api, "RPGDifficulty", "whitelistheight", RPGDifficultyModSystem.Logger, "rpgdifficulty:config/whitelistheight.json"),
             Age = ConfigManager.LoadModConfig<Dictionary<string, double>>(api, "RPGDifficulty", "whitelistage", RPGDifficultyModSystem.Logger, "rpgdifficulty:config/whitelistage.json"),
