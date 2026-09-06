@@ -46,6 +46,9 @@ public static class RegionSystem
 
         if (climate == null) return "unknown";
 
+        if (surfaceY >= Configuration.StatusRegion.mountainAltitudeThreshold)
+            return "mountain";
+
         // Thresholds from blocklayers.json worldgen:
         // L1 Soil: minFertility 0.22 → fertile ground (soil)
         // L1 Infertile Soil: maxFertility 0.25 → gravel (temp < 8) or sand (temp >= 8)

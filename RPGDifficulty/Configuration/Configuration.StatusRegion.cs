@@ -23,6 +23,9 @@ public class StatusRegionConfigurations
     // Interval in milliseconds to check if a player crossed into a new region
     public int regionCheckIntervalMs = 2000;
 
+    // Altitude threshold in blocks above which terrain is classified as mountain
+    public int mountainAltitudeThreshold = 160;
+
     // Spawn protection: radius in blocks where level is restricted
     public int initialRegionRadius = 1500;
 
