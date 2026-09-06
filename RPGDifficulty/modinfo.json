@@ -6,7 +6,7 @@
         "BoboDev"
     ],
     "description": "Increase or descrease entities stats based on some factors and spawn condition manipulation",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "Side": "Server",
     "dependencies": {
         "game": "",
