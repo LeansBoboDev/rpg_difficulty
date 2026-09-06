@@ -99,14 +99,13 @@ public static class RegionSystem
             }
         }
 
-        int rockHash = rockType == "unknown" ? 0 : Math.Abs(rockType.GetHashCode());
-        int surfaceHash = surfaceType == "unknown" ? 0 : Math.Abs(surfaceType.GetHashCode());
-        int initialFlag = isInitialRegion ? 1 : 0;
-        int seed = _api.World.Seed ^ (rockHash * 998999) ^ (surfaceHash * 777333) ^ (initialFlag * 777777);
+        int regionX = (int)Math.Floor(posX / Configuration.StatusRegion.regionSizeInBlocks);
+        int regionZ = (int)Math.Floor(posZ / Configuration.StatusRegion.regionSizeInBlocks);
+        int seed = _api.World.Seed ^ (regionX * 123456789) ^ (regionZ * 987654321);
         int level = new Random(seed).Next(minLevel, maxLevel + 1);
 
         RPGDifficultyModSystem.Logger.LogDebug(
-            $"[Region] RockType={rockType} SurfaceType={surfaceType} | " +
+            $"[Region] Tile=({regionX},{regionZ}) RockType={rockType} SurfaceType={surfaceType} | " +
             $"DistanceFromSpawn={distanceFromSpawn:F0} | " +
             $"InitialRegion={isInitialRegion} | " +
             $"LevelRange=[{minLevel}-{maxLevel}] | " +
