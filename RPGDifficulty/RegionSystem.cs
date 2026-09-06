@@ -84,6 +84,19 @@ public static class RegionSystem
                 minLevel = Configuration.StatusRegion.initialRegionMinLevel;
                 maxLevel = Configuration.StatusRegion.initialRegionMaxLevel;
             }
+            else if (Configuration.StatusRegion.enableDistanceBands)
+            {
+                int band = (int)(distanceFromSpawn / Configuration.StatusRegion.distanceBandSizeInBlocks);
+                minLevel += band * Configuration.StatusRegion.levelMinPerBand;
+                maxLevel += band * Configuration.StatusRegion.levelMaxPerBand;
+
+                int cap = Configuration.StatusRegion.distanceBandMaxLevelCap;
+                if (cap >= 0)
+                {
+                    maxLevel = Math.Min(maxLevel, cap);
+                    minLevel = Math.Min(minLevel, cap);
+                }
+            }
         }
 
         int rockHash = rockType == "unknown" ? 0 : Math.Abs(rockType.GetHashCode());
