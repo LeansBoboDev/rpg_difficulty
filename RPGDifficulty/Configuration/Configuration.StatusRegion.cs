@@ -21,7 +21,7 @@ public class StatusRegionConfigurations
     public double levelUPExperienceModifierPerLevel = 0.03;
 
     // Interval in milliseconds to check if a player crossed into a new region
-    public int regionCheckIntervalMs = 2000;
+    public int regionCheckIntervalMs = 500;
 
     // Altitude threshold in blocks above which terrain is classified as mountain
     public int mountainAltitudeThreshold = 160;
