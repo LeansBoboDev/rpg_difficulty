@@ -1,6 +1,9 @@
 # RPG Difficulty
 Monster and Creatures increases their status getting away from the spawn, getting deeper in the caves and by the world aging, highly configurable
 
+## Dependencies
+- [Open Configuration](https://mods.vintagestory.at/openconfiguration)
+
 Features:
 - Blacklist
 - Whitelist

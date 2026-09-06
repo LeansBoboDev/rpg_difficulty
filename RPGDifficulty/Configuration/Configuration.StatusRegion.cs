@@ -15,10 +15,13 @@ public class StatusRegionConfigurations
     public int regionMaxLevel = 99;
 
     // Per-stat modifier applied per level point in a region
-    public double lifeModifierPerLevel = 0.02;
-    public double damageModifierPerLevel = 0.02;
-    public double lootModifierPerLevel = 0.02;
-    public double levelUPExperienceModifierPerLevel = 0.02;
+    public double lifeModifierPerLevel = 0.1;
+    public double damageModifierPerLevel = 0.1;
+    public double lootModifierPerLevel = 0.1;
+    public double levelUPExperienceModifierPerLevel = 0.03;
+
+    // Interval in milliseconds to check if a player crossed into a new region
+    public int regionCheckIntervalMs = 2000;
 
     // Spawn protection: radius in blocks where level is restricted
     public int initialRegionRadius = 1500;

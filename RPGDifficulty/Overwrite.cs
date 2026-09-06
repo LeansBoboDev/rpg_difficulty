@@ -73,6 +73,7 @@ class DamageInteraction
                 healthPercentage += entity.Attributes.GetDouble("RPGDifficultyHealthStatsIncreaseDistance");
                 healthPercentage += entity.Attributes.GetDouble("RPGDifficultyHealthStatsIncreaseHeight");
                 healthPercentage += entity.Attributes.GetDouble("RPGDifficultyHealthStatsIncreaseAge");
+                healthPercentage += entity.Attributes.GetDouble("RPGDifficultyHealthStatsIncreaseRegion");
                 if (healthPercentage > 0)
                 {
 
@@ -177,6 +178,7 @@ class DamageInteraction
             damage += (float)(damage * entity.Attributes.GetDouble("RPGDifficultyDamageStatsIncreaseDistance"));
             damage += (float)(damage * entity.Attributes.GetDouble("RPGDifficultyDamageStatsIncreaseHeight"));
             damage += (float)(damage * entity.Attributes.GetDouble("RPGDifficultyDamageStatsIncreaseAge"));
+            damage += (float)(damage * entity.Attributes.GetDouble("RPGDifficultyDamageStatsIncreaseRegion"));
 
             // Variation
             if (Configuration.StatusVariation.enableStatusVariation)
@@ -221,6 +223,7 @@ class DamageInteraction
         float dropRate = (float)__instance.entity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseDistance");
         dropRate += (float)__instance.entity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseHeight");
         dropRate += (float)__instance.entity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseAge");
+        dropRate += (float)__instance.entity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseRegion");
 
         if (Configuration.StatusVariation.enableStatusVariation)
             dropRate *= (float)__instance.entity.Attributes.GetDouble("RPGDifficultyStatusVariation");

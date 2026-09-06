@@ -19,6 +19,8 @@ public class RPGDifficultyModSystem : ModSystem
     {
         base.StartServerSide(api);
         serverAPI = api;
+        RegionSystem.Initialize(api);
+        RegionAPI.Initialize(api);
 
         // Create the timer only with levelup compatibility
         if (api.ModLoader.IsModEnabled("levelup"))
@@ -60,6 +62,7 @@ public class RPGDifficultyModSystem : ModSystem
         float dropRate = (float)harvestedEntity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseDistance");
         dropRate += (float)harvestedEntity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseHeight");
         dropRate += (float)harvestedEntity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseAge");
+        dropRate += (float)harvestedEntity.Attributes.GetDouble("RPGDifficultyLootStatsIncreaseRegion");
 
         if (Configuration.StatusVariation.enableStatusVariation)
             dropRate *= (float)harvestedEntity.Attributes.GetDouble("RPGDifficultyStatusVariation");
@@ -111,13 +114,16 @@ public class RPGDifficultyModSystem : ModSystem
             }
         }
 
+        int regionLevel = RegionSystem.GetRegionLevel(player.Entity.Pos.X, player.Entity.Pos.Z);
+
         Logger.LogDebug($"[EXPERIENCE] Before: {amount}");
         // Increasing experience gain
         amount += (ulong)Math.Round(amount *
             (
                 (Configuration.StatusDistance.levelUPExperienceIncreaseEveryDistance * statsIncreaseDistance) +
                 (Configuration.StatusHeight.levelUPExperienceIncreaseEveryHeight * statsIncreaseHeight) +
-                (Configuration.StatusAge.levelUPExperienceIncreaseEveryAge * statsIncreaseAge)
+                (Configuration.StatusAge.levelUPExperienceIncreaseEveryAge * statsIncreaseAge) +
+                (Configuration.StatusRegion.levelUPExperienceModifierPerLevel * regionLevel)
             ));
         Logger.LogDebug($"[EXPERIENCE] After: {amount}");
     }
@@ -184,6 +190,7 @@ public class RPGDifficultyModSystem : ModSystem
             int statsIncreaseDistance = 0;
             int statsIncreaseHeight = 0;
             int statsIncreaseAge = 0;
+            int regionLevel = RegionSystem.GetRegionLevel(entity.Pos.X, entity.Pos.Z);
 
             // Stats increasing
             {
@@ -248,6 +255,8 @@ public class RPGDifficultyModSystem : ModSystem
                 if (healthAge > Configuration.StatusAge.maximumLifeStatusIncreasedByAge)
                     healthAge = Configuration.StatusAge.maximumLifeStatusIncreasedByAge;
 
+                double healthRegion = Configuration.StatusRegion.lifeModifierPerLevel * regionLevel;
+
                 // Setting health variables
                 if (increaseByDistance)
                     entity.Attributes.SetDouble("RPGDifficultyHealthStatsIncreaseDistance", healthDistance);
@@ -255,6 +264,7 @@ public class RPGDifficultyModSystem : ModSystem
                     entity.Attributes.SetDouble("RPGDifficultyHealthStatsIncreaseHeight", healthHeight);
                 if (increaseByAge)
                     entity.Attributes.SetDouble("RPGDifficultyHealthStatsIncreaseAge", healthAge);
+                entity.Attributes.SetDouble("RPGDifficultyHealthStatsIncreaseRegion", healthRegion);
 
                 double damageDistance = Configuration.StatusDistance.damageStatsIncreaseEveryDistance * statsIncreaseDistance;
                 if (damageDistance > Configuration.StatusDistance.maximumDamageStatusIncreasedByDistance)
@@ -268,6 +278,8 @@ public class RPGDifficultyModSystem : ModSystem
                 if (damageAge > Configuration.StatusAge.maximumDamageStatusIncreasedByAge)
                     damageAge = Configuration.StatusAge.maximumDamageStatusIncreasedByAge;
 
+                double damageRegion = Configuration.StatusRegion.damageModifierPerLevel * regionLevel;
+
                 // Setting damage variables
                 if (increaseByDistance)
                     entity.Attributes.SetDouble("RPGDifficultyDamageStatsIncreaseDistance", damageDistance);
@@ -275,6 +287,7 @@ public class RPGDifficultyModSystem : ModSystem
                     entity.Attributes.SetDouble("RPGDifficultyDamageStatsIncreaseHeight", damageHeight);
                 if (increaseByAge)
                     entity.Attributes.SetDouble("RPGDifficultyDamageStatsIncreaseAge", damageAge);
+                entity.Attributes.SetDouble("RPGDifficultyDamageStatsIncreaseRegion", damageRegion);
 
                 double lootDistance = Configuration.StatusDistance.lootStatsIncreaseEveryDistance * statsIncreaseDistance;
                 if (lootDistance > Configuration.StatusDistance.maximumLootStatusIncreasedByDistance)
@@ -288,15 +301,18 @@ public class RPGDifficultyModSystem : ModSystem
                 if (lootAge > Configuration.StatusAge.maximumLootStatusIncreasedByAge)
                     lootAge = Configuration.StatusAge.maximumLootStatusIncreasedByAge;
 
-                // Setting damage variables
+                double lootRegion = Configuration.StatusRegion.lootModifierPerLevel * regionLevel;
+
+                // Setting loot variables
                 if (increaseByDistance)
                     entity.Attributes.SetDouble("RPGDifficultyLootStatsIncreaseDistance", lootDistance);
                 if (increaseByHeight)
                     entity.Attributes.SetDouble("RPGDifficultyLootStatsIncreaseHeight", lootHeight);
                 if (increaseByAge)
                     entity.Attributes.SetDouble("RPGDifficultyLootStatsIncreaseAge", lootAge);
+                entity.Attributes.SetDouble("RPGDifficultyLootStatsIncreaseRegion", lootRegion);
 
-                Logger.LogDebug($"{entity.Code} health percentage: {healthDistance + healthHeight + healthAge} damage percentage: {damageDistance + damageHeight + damageAge} loot percentage: {lootDistance + lootHeight + lootAge}, variation: {variation}");
+                Logger.LogDebug($"{entity.Code} health: {healthDistance + healthHeight + healthAge + healthRegion} damage: {damageDistance + damageHeight + damageAge + damageRegion} loot: {lootDistance + lootHeight + lootAge + lootRegion} region level: {regionLevel} variation: {variation}");
             }
         }
 
